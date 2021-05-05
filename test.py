@@ -19,13 +19,13 @@ def fetch(url, json):
 	return r.json()
 
 def fetch_available_dates(location, startDate, endDate, dose=1):
+	url = f'https://api.covaxonbooking.ca/public/locations/{location}/availability'
 	json = {
 		'startDate': startDate,
 		'endDate': endDate,
 		'vaccineData':'WyJhMWQ0dDAwMDAwMDFqZGtBQUEiXQ==',
 		'doseNumber':dose,
 	}
-	url = 'https://api.covaxonbooking.ca/public/locations/%s/availability' % location
 	return fetch(url, json)
 
 #location query:
@@ -52,11 +52,9 @@ def main():
 	response = fetch_available_dates(args.location, args.start, args.end)
 
 	avail = [S['date'] for S in response['availability'] if S['available']]
-	print(avail)
+	print(f'available dates: {avail}')
 
-	print("\n\n\n")
 
-	print(response)
 
 if __name__ == '__main__':
   main()
