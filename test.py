@@ -28,6 +28,13 @@ def fetch_available_dates(location, startDate, endDate, dose=1):
 	}
 	return fetch(url, json)
 
+def fetch_available_times(location, date):
+	url = f'https://api.covaxonbooking.ca/public/locations/{location}/date/{date}/slots'
+	json = {
+		'vaccineData':'WyJhMWQ0dDAwMDAwMDFqZGtBQUEiXQ==',
+	}
+	return fetch(url, json)
+
 #location query:
 #https://api.covaxonbooking.ca/public/locations/search
 #{"location":{"lat":43.7744758,"lng":-79.2551582},"fromDate":"2021-05-04","vaccineData":"WyJhMWQ0dDAwMDAwMDFqY0lBQVEiLCJhMWQ0dDAwMDAwMDFqaUxBQVEiLCJhMWQ0dDAwMDAwMDFrOVpBQVEiLCJhMWQ0dDAwMDAwMDFrTVNBQVkiLCJhMWQ0dDAwMDAwMDFrWGtBQUkiLCJhMWQ0dDAwMDAwMDFrWHBBQUkiLCJhMWQ0dDAwMDAwMDFrZzhBQUEiLCJhMWQ0dDAwMDAwMDFrdTdBQUEiLCJhMWQ0dDAwMDAwMDFaSGxBQU0iLCJhMWQ0dDAwMDAwMDFaSG1BQU0iLCJhMWQ0dDAwMDAwMDFnbzdBQUEiLCJhMWQ0dDAwMDAwMDFoMkVBQVEiLCJhMWQ0dDAwMDAwMDFpbnhBQUEiLCJhMWQ0dDAwMDAwMDFqZGtBQUEiXQ==","locationQuery":{"includePools":["default"]},"doseNumber":1}
@@ -49,10 +56,16 @@ def main():
 		help='end date in YYYY-MM-DD format')
 	args = parser.parse_args()
 
-	response = fetch_available_dates(args.location, args.start, args.end)
+	dates_response = fetch_available_dates(args.location, args.start, args.end)
 
-	avail = [S['date'] for S in response['availability'] if S['available']]
-	print(f'available dates: {avail}')
+	avail_dates = [S['date'] for S in dates_response['availability'] if S['available']]
+	print(f'available dates: {avail_dates}')
+
+	if len(avail_dates) > 0 and len(avail_dates) <= 5:
+		for date in avail_dates:
+			times_response = fetch_available_times(args.location, date)
+			avail_times = [S['localStartTime'] for S in times_response['slotsWithAvailability']]
+			print(f'available times for {date}: {avail_times}')
 
 
 
