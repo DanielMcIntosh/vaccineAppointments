@@ -14,7 +14,7 @@ def make_header():
 def fetch(url, json):
 	r = requests.post(url, json=json, headers=make_header())
 	if r.status_code != 200:
-		print("request returned error:")
+		print('request returned error:')
 		print(r.reason)
 	return r.json()
 
@@ -61,7 +61,7 @@ def main():
 	avail_dates = [S['date'] for S in dates_response['availability'] if S['available']]
 	print(f'available dates: {avail_dates}')
 
-	if len(avail_dates) > 0 and len(avail_dates) <= 5:
+	if 0 < len(avail_dates) and len(avail_dates) <= 5:
 		for date in avail_dates:
 			times_response = fetch_available_times(args.location, date)
 			avail_times = [S['localStartTime'] for S in times_response['slotsWithAvailability']]
