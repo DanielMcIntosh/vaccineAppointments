@@ -18,6 +18,20 @@ def fetch(url, json):
 		print(r.reason)
 	return r.json()
 
+def fetch_nearby_locations(lat, lng, date, dose=1):
+	url = f'https://api.covaxonbooking.ca/public/locations/search'
+	json = {
+		'location': {
+			'lat': lat,
+			'lng': lng
+		},
+		'fromDate': date,
+		'vaccineData': 'WyJhMWQ0dDAwMDAwMDFqY0lBQVEiLCJhMWQ0dDAwMDAwMDFqaUxBQVEiLCJhMWQ0dDAwMDAwMDFrOVpBQVEiLCJhMWQ0dDAwMDAwMDFrTVNBQVkiLCJhMWQ0dDAwMDAwMDFrWGtBQUkiLCJhMWQ0dDAwMDAwMDFrWHBBQUkiLCJhMWQ0dDAwMDAwMDFrZzhBQUEiLCJhMWQ0dDAwMDAwMDFrdTdBQUEiLCJhMWQ0dDAwMDAwMDFaSGxBQU0iLCJhMWQ0dDAwMDAwMDFaSG1BQU0iLCJhMWQ0dDAwMDAwMDFnbzdBQUEiLCJhMWQ0dDAwMDAwMDFoMkVBQVEiLCJhMWQ0dDAwMDAwMDFpbnhBQUEiLCJhMWQ0dDAwMDAwMDFqZGtBQUEiXQ==',
+		'locationQuery': {'includePools': ['default'] },
+		'doseNumber': dose,
+	}
+	return fetch(url, json)
+
 def fetch_available_dates(location, startDate, endDate, dose=1):
 	url = f'https://api.covaxonbooking.ca/public/locations/{location}/availability'
 	json = {
